@@ -1,11 +1,11 @@
-from jug_riddle import Jug, JugAction, JugRiddle
+from jug_riddle import Jug, JugAction, JugRiddle, UnsolvableRiddle, solve
 
 
 def main(x: int, y: int, z: int) -> bool:
 
     riddle = JugRiddle(x, y, z)
     while not riddle.done:
-        user_action = input("Fill, Empty, Transfer, Quit: ")
+        user_action = input("Fill, Empty, Transfer, Auto, Quit: ")
         user_action = user_action.upper()
         if user_action == "Q":
             print("You went kabooom!")
@@ -17,6 +17,12 @@ def main(x: int, y: int, z: int) -> bool:
             action = JugAction.EMPTY
         elif user_action == "T":
             action = JugAction.TRANSFER
+        elif user_action == "A":
+            # magic
+            try:
+                riddle = solve(riddle)
+            except UnsolvableRiddle as ex:
+                print("Riddle is not solvable!")
         else:
             print(f"Invalid user action '{user_action}'!")
         if action is not None:
