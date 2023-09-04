@@ -1,8 +1,7 @@
 import sys
 
-from jug_riddle.command_line import get_inputs, play_water_jug_riddle
+from ui.jug_riddle_ui import water_jug_riddle_ui
 
 if __name__ == "__main__":
-    x, y ,z = get_inputs()
-    play_water_jug_riddle(x, y, z)
+    water_jug_riddle_ui()
     sys.exit(0)
