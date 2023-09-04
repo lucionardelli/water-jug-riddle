@@ -7,6 +7,7 @@ DOCKER_IMAGE="water-jug-riddle"
 DOCKER_RUN_CMD="docker run -u=$(id -u $USER):$(id -g $USER) \
            -e DISPLAY=$DISPLAY \
            -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
+           -p 5000:5000 \
            --rm \
            $DOCKER_IMAGE"
 
