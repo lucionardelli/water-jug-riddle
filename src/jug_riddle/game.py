@@ -54,7 +54,6 @@ class JugRiddle:
         and the goal is a non-negative integer.
     """
 
-
     def __init__(self, jug_1: int, jug_2: int, goal: int):
         """
         Initialize the JugRiddle instance with jug capacities and a goal.

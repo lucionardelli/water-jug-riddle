@@ -23,11 +23,14 @@ def is_solvable(riddle: JugRiddle) -> bool:
     If so, we checked whether the necessary and sufficient condition for Diophantine equations
     holds.
     """
-    return ((riddle.goal <= max(riddle.jug_1_capacity, riddle.jug_2_capacity)) and 
-            (riddle.goal % math.gcd(riddle.jug_1_capacity, riddle.jug_2_capacity) == 0))
+    return (riddle.goal <= max(riddle.jug_1_capacity, riddle.jug_2_capacity)) and (
+        riddle.goal % math.gcd(riddle.jug_1_capacity, riddle.jug_2_capacity) == 0
+    )
 
 
-def __solve_riddle_by_always_poruing_from_one_jug(riddle: JugRiddle, pouring_jug: Jug) -> None:
+def __solve_riddle_by_always_poruing_from_one_jug(
+    riddle: JugRiddle, pouring_jug: Jug
+) -> None:
     """
     Solves the Water Jug Riddle by repeatedly pouring water from one jug into the other.
 
@@ -77,7 +80,7 @@ def solve(riddle: JugRiddle) -> JugRiddle:
     """
     if not is_solvable(riddle):
         # Riddle is not solvable.
-        raise UnsolvableRiddle(f"Riddle can't be solved!")
+        raise UnsolvableRiddle("Riddle can't be solved!")
 
     # To find the sequence of operations, the following algorithm is applied:
     #  * Repeat until the desired amount of water is obtained:
@@ -94,5 +97,5 @@ def solve(riddle: JugRiddle) -> JugRiddle:
     riddle_2 = JugRiddle(riddle.jug_1_capacity, riddle.jug_2_capacity, riddle.goal)
     __solve_riddle_by_always_poruing_from_one_jug(riddle_2, Jug.JUG_2)
 
-    sol = min(riddle_1, riddle_2, key=lambda r: len(r))
+    sol = min(riddle_1, riddle_2, key=len)
     return sol
