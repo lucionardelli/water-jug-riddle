@@ -8,6 +8,7 @@ class WaterJugGUI:
     A GUI application for solving the Water Jug Riddle.
     Allows the user to input jug capacities and a goal, and interactively solve the riddle or use auto-solve
     """
+
     def __init__(self, root):
         self.root = root
         self.root.title("Water Jug Riddle")
@@ -90,6 +91,7 @@ class RiddleFrame:
         jug2_capacity (int): Capacity of Jug 2.
         goal (int): The goal amount of water to achieve.
     """
+
     def __init__(self, root, jug1_capacity, jug2_capacity, goal):
         self.root = root
         self.riddle = JugRiddle(jug1_capacity, jug2_capacity, goal)
@@ -113,22 +115,7 @@ class RiddleFrame:
         canvas.create_text(50, 190, text=f"{current_water}/{capacity}")
         canvas.pack(side="left", padx=10)
 
-    def display_riddle(self):
-        # Create two Canvas widgets to draw the jugs
-        jug1_canvas = tk.Canvas(self.frame, width=100, height=200, bg="white")
-        jug2_canvas = tk.Canvas(self.frame, width=100, height=200, bg="white")
-
-        self.draw_jug(
-            jug1_canvas,
-            self.riddle.jug_1_capacity,
-            self.riddle._states[self.current_state].jug_1,
-        )
-        self.draw_jug(
-            jug2_canvas,
-            self.riddle.jug_2_capacity,
-            self.riddle._states[self.current_state].jug_2,
-        )
-
+    def display_stepper(self):
         # Buttons for moving through states
         if 0 < self.current_state:
             back_state = "normal"
@@ -156,13 +143,58 @@ class RiddleFrame:
             self.frame, text=">>", command=self.next_action, state=next_state
         ).pack(side="left", padx=10)
 
+    def display_message_area(self):
         # Create text widget to show the actions taken there
-        T = tk.Text(self.frame, height=5, width=52)
+        text_area = tk.Text(self.frame, height=5, width=52)
         if self.unsolvable:
-            T.insert(tk.END, "*** RIDDLE IS UNSOLVABLE! ***")
-        for idx, (action, jug) in enumerate(self.riddle._actions[0:self.current_state]):
-            T.insert(tk.END, f"Step {idx+1}: {action.name} JUG {jug.value}\n")
-        T.pack(side="left", padx=10, pady=5)
+            text_area.insert(tk.END, "*** RIDDLE IS UNSOLVABLE! ***")
+        for idx, (action, jug) in enumerate(
+            self.riddle._actions[0 : self.current_state]
+        ):
+            text_area.insert(tk.END, f"Step {idx+1}: {action.name} JUG {jug.value}\n")
+        text_area.pack(side="left", padx=10, pady=5)
+
+    def display_manual_controls(self):
+        tk.Radiobutton(
+            self.frame,
+            text="Jug 2",
+            variable=self.action_jug,
+            indicatoron=False,
+            value=Jug.JUG_2.name,
+            width=8,
+        ).pack(side="right")
+        tk.Radiobutton(
+            self.frame,
+            text="Jug 1",
+            variable=self.action_jug,
+            indicatoron=False,
+            value=Jug.JUG_1.name,
+            width=8,
+        ).pack(side="right")
+
+        tk.Button(self.frame, text="Fill", command=self.fill_action).pack(side="right")
+        tk.Button(self.frame, text="Empty", command=self.empty_action).pack(
+            side="right"
+        )
+        tk.Button(self.frame, text="Transfer", command=self.transfer_action).pack(
+            side="right"
+        )
+
+    def display_riddle(self):
+        # Create two Canvas widgets to draw the jugs
+        jug1_canvas = tk.Canvas(self.frame, width=100, height=200, bg="white")
+        jug2_canvas = tk.Canvas(self.frame, width=100, height=200, bg="white")
+
+        self.draw_jug(
+            jug1_canvas,
+            self.riddle.jug_1_capacity,
+            self.riddle._states[self.current_state].jug_1,
+        )
+        self.draw_jug(
+            jug2_canvas,
+            self.riddle.jug_2_capacity,
+            self.riddle._states[self.current_state].jug_2,
+        )
 
         # Buttons for solving or playing
         if self.chose_mode:
@@ -172,33 +204,11 @@ class RiddleFrame:
             tk.Button(
                 self.frame, text="Solve Automatically", command=self.solve_riddle
             ).pack()
-        elif self.action_jug is not None:
-            tk.Radiobutton(
-                self.frame,
-                text="Jug 2",
-                variable=self.action_jug,
-                indicatoron=False,
-                value=Jug.JUG_2.name,
-                width=8,
-            ).pack(side="right")
-            tk.Radiobutton(
-                self.frame,
-                text="Jug 1",
-                variable=self.action_jug,
-                indicatoron=False,
-                value=Jug.JUG_1.name,
-                width=8,
-            ).pack(side="right")
-
-            tk.Button(self.frame, text="Fill", command=self.fill_action).pack(
-                side="right"
-            )
-            tk.Button(self.frame, text="Empty", command=self.empty_action).pack(
-                side="right"
-            )
-            tk.Button(self.frame, text="Transfer", command=self.transfer_action).pack(
-                side="right"
-            )
+        else:
+            self.display_stepper()
+            self.display_message_area()
+            if self.action_jug is not None:
+                self.display_manual_controls()
 
         # Pack the riddle frame to display it
         self.frame.pack()
