@@ -22,8 +22,8 @@ The jugs do not have markings to measure smaller quantities.
 
 * No partial measurement. Each jug can be empty or full.
 * Actions allowed: Fill, Empty, Transfer.
-* Use one of the following programming languages: Scala, Java, Nodejs, Go, Python, C, C++, Kotlin.
 
+  
 ## How to run
 
 The application runs dockerized and it has a GUI implemented using tkinter. This means that running
