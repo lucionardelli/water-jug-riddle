@@ -1,8 +1,6 @@
 import tkinter as tk
 
-from jug_riddle import JugRiddle
-from jug_riddle import Jug, JugAction
-from jug_riddle import solve
+from jug_riddle import Jug, JugAction, JugRiddle, UnsolvableRiddle, solve
 
 
 class WaterJugGUI:
@@ -95,6 +93,7 @@ class RiddleFrame:
     def __init__(self, root, jug1_capacity, jug2_capacity, goal):
         self.root = root
         self.riddle = JugRiddle(jug1_capacity, jug2_capacity, goal)
+        self.unsolvable = False
         self.current_state = 0
         self.frame = tk.Frame(self.root)
         self.frame.pack(expand=True, fill="both")
@@ -159,6 +158,8 @@ class RiddleFrame:
 
         # Create text widget to show the actions taken there
         T = tk.Text(self.frame, height=5, width=52)
+        if self.unsolvable:
+            T.insert(tk.END, "*** RIDDLE IS UNSOLVABLE! ***")
         for idx, (action, jug) in enumerate(self.riddle._actions[0:self.current_state]):
             T.insert(tk.END, f"Step {idx+1}: {action.name} JUG {jug.value}\n")
         T.pack(side="left", padx=10, pady=5)
@@ -239,7 +240,10 @@ class RiddleFrame:
 
     def solve_riddle(self):
         self.chose_mode = False
-        self.riddle = solve(self.riddle)
+        try:
+            self.riddle = solve(self.riddle)
+        except UnsolvableRiddle:
+            self.unsolvable = True
         self.current_state = 0  # Reset the current state
         self.refresh()
 
