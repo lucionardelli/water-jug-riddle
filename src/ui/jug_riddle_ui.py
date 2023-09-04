@@ -157,6 +157,12 @@ class RiddleFrame:
             self.frame, text=">>", command=self.next_action, state=next_state
         ).pack(side="left", padx=10)
 
+        # Create text widget to show the actions taken there
+        T = tk.Text(self.frame, height=5, width=52)
+        for idx, (action, jug) in enumerate(self.riddle._actions[0:self.current_state]):
+            T.insert(tk.END, f"Step {idx+1}: {action.name} JUG {jug.value}\n")
+        T.pack(side="left", padx=10, pady=5)
+
         # Buttons for solving or playing
         if self.chose_mode:
             tk.Button(
