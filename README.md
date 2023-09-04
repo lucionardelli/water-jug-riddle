@@ -58,3 +58,11 @@ Using this script, we can just run:
 ```sh
 $ ./run.sh
 ```
+
+## Run tests
+
+In order to run the unit tests inside docker, run:
+
+```sh
+$ docker run water-jug-riddle python -m unittest src.tests 
+```
