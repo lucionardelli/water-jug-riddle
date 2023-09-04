@@ -166,24 +166,23 @@ class RiddleFrame:
                 self.frame, text="Solve Automatically", command=self.solve_riddle
             ).pack()
         elif self.action_jug is not None:
-            switch_variable = tk.StringVar(value=self.action_jug.value)
-
             tk.Radiobutton(
                 self.frame,
                 text="Jug 2",
-                variable=switch_variable,
+                variable=self.action_jug,
                 indicatoron=False,
-                value=Jug.JUG_2,
+                value=Jug.JUG_2.name,
                 width=8,
             ).pack(side="right")
             tk.Radiobutton(
                 self.frame,
                 text="Jug 1",
-                variable=switch_variable,
+                variable=self.action_jug,
                 indicatoron=False,
-                value=Jug.JUG_1,
+                value=Jug.JUG_1.name,
                 width=8,
             ).pack(side="right")
+
             tk.Button(self.frame, text="Fill", command=self.fill_action).pack(
                 side="right"
             )
@@ -198,17 +197,17 @@ class RiddleFrame:
         self.frame.pack()
 
     def fill_action(self):
-        self.riddle.take_action(self.action_jug, JugAction.FILL)
+        self.riddle.take_action(Jug[self.action_jug.get()], JugAction.FILL)
         self.current_state += 1
         self.refresh()
 
     def empty_action(self):
-        self.riddle.take_action(self.action_jug, JugAction.EMPTY)
+        self.riddle.take_action(Jug[self.action_jug.get()], JugAction.EMPTY)
         self.current_state += 1
         self.refresh()
 
     def transfer_action(self):
-        self.riddle.take_action(self.action_jug, JugAction.TRANSFER)
+        self.riddle.take_action(Jug[self.action_jug.get()], JugAction.TRANSFER)
         self.current_state += 1
         self.refresh()
 
@@ -222,7 +221,10 @@ class RiddleFrame:
         self.display_riddle()
 
     def previous_action(self):
-        self.current_state = min(self.current_state - 1, 0)
+        self.current_state = max(self.current_state - 1, 0)
+        if self.action_jug is not None:
+            # We are playing manually. We need to modify the sate of the riddle.
+            self.riddle.undo_last_action()
         self.refresh()
 
     def next_action(self):
@@ -237,7 +239,7 @@ class RiddleFrame:
 
     def play_riddle(self):
         self.chose_mode = False
-        self.action_jug = Jug.JUG_1.name
+        self.action_jug = tk.StringVar(value=Jug.JUG_1.name)
         self.refresh()
 
 
