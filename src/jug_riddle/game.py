@@ -184,6 +184,13 @@ class JugRiddle:
             after_action_jugs[Jug.JUG_1], after_action_jugs[Jug.JUG_2]
         )
 
+
+    def undo_last_action(self):
+        """Useful when solving the riddle manually and a mistake was made and we want to 
+        go back to a previous step"""
+        self._actions = self._actions[:-1]
+        self._states = self._states[:-1]
+
     def view_solution(self) -> str:
         """Returns a string that shows the solution (if already found) of the riddle"""
         if not self.done:
